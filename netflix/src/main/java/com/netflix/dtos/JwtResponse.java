@@ -1,19 +1,21 @@
 package com.netflix.dtos;
 
-import lombok.Data;
+import lombok.Getter;
+
 import java.util.List;
 
-@Data
+@Getter
 public class JwtResponse {
-    private String token;
-    private String type = "Bearer";
-    private Long id;
-    private String username;
-    private String email;
-    private List<String> roles;
 
-    public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
-        this.token = accessToken;
+    private final String token;
+    private final String type = "Bearer";
+    private final Long id;
+    private final String username;
+    private final String email;
+    private final List<String> roles;
+
+    public JwtResponse(String token, Long id, String username, String email, List<String> roles) {
+        this.token = token;
         this.id = id;
         this.username = username;
         this.email = email;

@@ -1,9 +1,11 @@
 package com.netflix.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,9 +15,13 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")
         })
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class User implements Serializable {
+
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,24 +35,15 @@ public class User implements Serializable {
     @Column(nullable = false, length = 120)
     private String password;
 
-    // Quan hệ Many-to-Many với bảng Roles
-    // FetchType.EAGER: Khi load User lên, lập tức load luôn Role đi kèm
-    // (vì Spring Security cần biết quyền ngay để check login)
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles", // Tên bảng trung gian
-            joinColumns = @JoinColumn(name = "user_id"), // Khóa ngoại trỏ về User
-            inverseJoinColumns = @JoinColumn(name = "role_id")) // Khóa ngoại trỏ về Role
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    // Constructor mặc định (Bắt buộc với JPA)
-    public User() {
-    }
-
-    // Constructor tiện ích để tạo nhanh
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
     }
-
 }

@@ -1,11 +1,10 @@
 package com.netflix.security;
 
 import com.netflix.services.impl.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -17,65 +16,59 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableMethodSecurity // Cho phép dùng @PreAuthorize ở Controller
+@EnableMethodSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final AuthEntryPointJwt unauthorizedHandler;
 
-    @Autowired
-    private AuthEntryPointJwt unauthorizedHandler;
+    // Inject bộ lọc giới hạn request (Rate Limit Filter)
+    private final RateLimitFilter rateLimitFilter;
 
-    // Tạo Bean cho Filter của chúng ta
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter();
     }
 
-    // Cung cấp thuật toán mã hóa mật khẩu (BCrypt) cho hệ thống
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Tạo Bean AuthenticationManager để dùng ở Controller lúc Login
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
-    // Kết nối UserDetailsService và PasswordEncoder
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
-
-//        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
 
-
-
-    // CẤU HÌNH CHÍNH (THE CHAIN)
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()) // Tắt CSRF vì chúng ta dùng Token, không dùng Cookie Session
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler)) // Xử lý lỗi 401
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Không lưu Session
+        http
+                .csrf(csrf -> csrf.disable())
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Cho phép ai cũng được truy cập vào đường dẫn đăng nhập/đăng ký
                         .requestMatchers("/api/auth/**").permitAll()
-                         // 🔥 CHO PHÉP TRUY CẬP FILE UPLOADS KHÔNG CẦN ĐĂNG NHẬP
-                    .requestMatchers("/uploads/**").permitAll()
-                        // Tất cả các request còn lại đều phải đăng nhập
+                        .requestMatchers("/uploads/**").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/movies").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/movies/search").permitAll()
                         .anyRequest().authenticated()
                 );
 
-        // Thêm Provider
         http.authenticationProvider(authenticationProvider());
 
-        // Thêm Filter của chúng ta vào trước Filter mặc định của Spring
-        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        // Đăng ký bộ lọc giới hạn request TRƯỚC bộ lọc xác thực JWT
+        // Thứ tự: RateLimitFilter → AuthTokenFilter → UsernamePasswordAuthenticationFilter
+        // Điều này đảm bảo request bị chặn sớm nếu vượt quá giới hạn, trước khi xử lý xác thực
+        http.addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(authenticationJwtTokenFilter(), RateLimitFilter.class);
 
         return http.build();
     }

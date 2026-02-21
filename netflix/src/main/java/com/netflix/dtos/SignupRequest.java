@@ -1,12 +1,15 @@
 package com.netflix.dtos;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 public class SignupRequest {
     private String username;
     private String email;
-    private Set<String> role; // Danh sách role muốn đăng ký (nếu có)
+    private Set<String> roles;
     private String password;
 }

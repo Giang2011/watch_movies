@@ -1,20 +1,33 @@
 package com.netflix.entities;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 @Entity
 @Table(name = "roles")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Role implements Serializable {
+
     private static final long serialVersionUID = 1L;
+
+    public static final String ROLE_USER = "ROLE_USER";
+    public static final String ROLE_MANAGER = "ROLE_MANAGER";
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Lưu ý: name ở đây sẽ lưu chuỗi dạng "ROLE_ADMIN", "ROLE_USER"...
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String name;
+
+    public Role(String name) {
+        this.name = name;
+    }
 }

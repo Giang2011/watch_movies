@@ -1,6 +1,8 @@
 package com.netflix.config;
 
-import org.springframework.cache.annotation.EnableCaching;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -10,42 +12,29 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 
 import java.time.Duration;
 
 @Configuration
-@EnableCaching
 public class RedisConfig {
 
-    /**
-     * RedisTemplate dùng StringSerializer cho cả key và value.
-     * UserCacheService sẽ dùng template này để lưu/đọc dữ liệu user
-     * dạng Hash đơn giản (String → String), tránh hoàn toàn vấn đề
-     * Jackson serialize SimpleGrantedAuthority.
-     */
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new StringRedisSerializer());
-        template.setHashKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(new StringRedisSerializer());
+
+        StringRedisSerializer stringSerializer = new StringRedisSerializer();
+        template.setKeySerializer(stringSerializer);
+        template.setValueSerializer(stringSerializer);
+        template.setHashKeySerializer(stringSerializer);
+        template.setHashValueSerializer(stringSerializer);
         template.afterPropertiesSet();
+
         return template;
     }
 
-    /**
-     * CacheManager chỉ dùng cho các cache đơn giản như movies.
-     * KHÔNG dùng cho user/role vì Jackson không serialize được
-     * SimpleGrantedAuthority đúng cách.
-     */
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
-
         ObjectMapper objectMapper = JsonMapper.builder()
                 .activateDefaultTyping(
                         LaissezFaireSubTypeValidator.instance,
@@ -60,9 +49,7 @@ public class RedisConfig {
                                 .fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(
                         RedisSerializationContext.SerializationPair
-                                .fromSerializer(
-                                        new GenericJackson2JsonRedisSerializer(objectMapper)
-                                ));
+                                .fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper)));
 
         return RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(config)
