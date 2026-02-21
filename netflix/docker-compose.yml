@@ -1,0 +1,145 @@
+# ============================
+# Docker Compose - Netflix Backend
+# Bao gồm: MySQL + Redis + Spring Boot Backend
+# ============================
+# Cách sử dụng:
+#   Khởi chạy tất cả:    docker-compose up -d
+#   Dừng tất cả:         docker-compose down
+#   Xem logs:            docker-compose logs -f
+#   Rebuild backend:     docker-compose up -d --build backend
+
+services:
+
+  # ==========================================
+  # 1. MySQL Database
+  # ==========================================
+  mysql:
+    # Sử dụng MySQL phiên bản 8.0
+    image: mysql:8.0
+    container_name: netflix-mysql
+
+    # Cấu hình biến môi trường cho MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: root123          # Mật khẩu cho tài khoản root
+      MYSQL_DATABASE: netflix               # Tự động tạo database "netflix" khi khởi động
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4   # Hỗ trợ tiếng Việt và emoji
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+
+    # Ánh xạ cổng: cổng 3307 trên máy host → cổng 3306 trong container
+    # Dùng 3307 để tránh xung đột nếu máy host đã chạy MySQL trên 3306
+    ports:
+      - "3307:3306"
+
+    # Gắn volume để dữ liệu không bị mất khi container bị xóa
+    volumes:
+      - mysql_data:/var/lib/mysql                  # Lưu dữ liệu MySQL
+      - ./init/init.sql:/docker-entrypoint-initdb.d/init.sql  # Chạy script khởi tạo database
+
+    # Kiểm tra sức khỏe của MySQL (đảm bảo MySQL đã sẵn sàng trước khi backend kết nối)
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot123"]
+      interval: 10s      # Kiểm tra mỗi 10 giây
+      timeout: 5s         # Timeout sau 5 giây
+      retries: 5          # Thử lại tối đa 5 lần
+      start_period: 30s   # Chờ 30 giây trước khi bắt đầu kiểm tra
+
+    # Tự động khởi động lại nếu container bị crash
+    restart: unless-stopped
+
+    # Kết nối vào mạng nội bộ
+    networks:
+      - netflix-network
+
+  # ==========================================
+  # 2. Redis (Cache và Session)
+  # ==========================================
+  redis:
+    # Sử dụng Redis phiên bản 7 (bản Alpine nhẹ hơn)
+    image: redis:7-alpine
+    container_name: netflix-redis
+
+    # Ánh xạ cổng Redis
+    ports:
+      - "6379:6379"
+
+    # Gắn volume để dữ liệu cache không bị mất
+    volumes:
+      - redis_data:/data
+
+    # Kiểm tra sức khỏe của Redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+    # Tự động khởi động lại
+    restart: unless-stopped
+
+    networks:
+      - netflix-network
+
+  # ==========================================
+  # 3. Spring Boot Backend
+  # ==========================================
+  backend:
+    # Build từ Dockerfile trong thư mục hiện tại
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: netflix-backend
+
+    # Cấu hình biến môi trường (ghi đè application.properties trong container)
+    environment:
+      # Kết nối MySQL: dùng tên service "mysql" thay vì "localhost"
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/netflix?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root123
+
+      # Kết nối Redis: dùng tên service "redis" thay vì "localhost"
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+
+      # Cấu hình JPA
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+
+    # Ánh xạ cổng backend
+    ports:
+      - "8080:8080"
+
+    # Gắn volume cho thư mục uploads (để file upload không bị mất)
+    volumes:
+      - ./uploads:/app/uploads
+
+    # Backend phụ thuộc vào MySQL và Redis
+    # Chỉ khởi động backend khi MySQL và Redis đã sẵn sàng (healthy)
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    # Tự động khởi động lại
+    restart: unless-stopped
+
+    networks:
+      - netflix-network
+
+# ==========================================
+# Volumes (Lưu trữ dữ liệu bền vững)
+# ==========================================
+volumes:
+  mysql_data:
+    driver: local     # Dữ liệu MySQL được lưu trên máy host
+  redis_data:
+    driver: local     # Dữ liệu Redis được lưu trên máy host
+
+# ==========================================
+# Networks (Mạng nội bộ giữa các container)
+# ==========================================
+networks:
+  netflix-network:
+    driver: bridge    # Các container có thể giao tiếp với nhau qua tên service

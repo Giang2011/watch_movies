@@ -1,0 +1,35 @@
+# ============================
+# .dockerignore - Loại bỏ các file/thư mục không cần thiết khi build Docker image
+# Giúp giảm kích thước image và tăng tốc quá trình build
+# ============================
+
+# Thư mục build output (sẽ được build lại trong container)
+target/
+
+# Thư mục IDE
+.idea/
+*.iml
+.vscode/
+*.classpath
+*.project
+.settings/
+
+# File Git
+.git/
+.gitignore
+
+# File Docker (không cần sao chép vào image)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# File upload (được mount qua volume, không cần copy vào image)
+uploads/
+
+# File log
+*.log
+logs/
+
+# File hệ điều hành
+.DS_Store
+Thumbs.db

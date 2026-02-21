@@ -1,6 +1,9 @@
--- 1. Tạo bảng Roles (Lưu danh sách quyền)
-create database netflix
-CREATE TABLE roles (
+-- 1. Tạo database nếu chưa có
+CREATE DATABASE IF NOT EXISTS netflix;
+USE netflix;
+
+-- 2. Tạo bảng Roles (Lưu danh sách quyền)
+CREATE TABLE IF NOT EXISTS roles (
     id BIGINT NOT NULL AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
     PRIMARY KEY (id),
