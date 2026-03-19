@@ -4,6 +4,8 @@ import com.netflix.entities.Movie;
 import com.netflix.repositories.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,6 @@ import java.util.List;
 public class MovieService {
 
     private static final String CACHE_NAME = "movies";
-    private static final String CACHE_KEY = "'allMovies'";
 
     private final MovieRepository movieRepository;
     private final Path rootLocation = Paths.get("uploads");
@@ -49,19 +50,19 @@ public class MovieService {
         }
     }
 
-    @Cacheable(value = CACHE_NAME, key = CACHE_KEY)
-    public List<Movie> getAllMovies() {
-        return movieRepository.findAll();
+    @Cacheable(value = CACHE_NAME, key = "#page + '_' + #size")
+    public Page<Movie> getAllMovies(int page, int size) {
+        return movieRepository.findAll(PageRequest.of(page, size));
     }
 
     @Transactional
-    @CacheEvict(value = CACHE_NAME, key = CACHE_KEY)
+    @CacheEvict(value = CACHE_NAME, allEntries = true)
     public Movie addMovie(Movie movie) {
         return movieRepository.save(movie);
     }
 
     @Transactional
-    @CacheEvict(value = CACHE_NAME, key = CACHE_KEY)
+    @CacheEvict(value = CACHE_NAME, allEntries = true)
     public Movie updateMovie(Long id, Movie movieDetails) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Movie not found with ID: " + id));
@@ -87,7 +88,7 @@ public class MovieService {
     }
 
     @Transactional
-    @CacheEvict(value = CACHE_NAME, key = CACHE_KEY)
+    @CacheEvict(value = CACHE_NAME, allEntries = true)
     public void deleteMovie(Long id) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Movie not found with ID: " + id));
