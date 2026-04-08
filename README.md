@@ -1,6 +1,6 @@
-# 🎬 Netflix Clone - Full-Stack Application
+# 🎬 Movie Streaming Platform - Full-Stack Application
 
-Welcome to the **Netflix Clone** project! This is a complete movie streaming platform featuring user authentication, role-based access control (RBAC), a personalized movie catalog, search functionality, media uploading, and personalized "favorites" management.
+Welcome to the **Movie Streaming Platform** project! This is a complete movie streaming platform featuring user authentication, role-based access control (RBAC), a personalized movie catalog, search functionality, media uploading, and personalized "favorites" management.
 
 The project is built using a modern client-server architecture, with a **React (Vite)** frontend and a **Spring Boot (Java)** backend.
 
@@ -51,12 +51,12 @@ The backend is a robust RESTful API built with Java and Spring Boot, designed fo
 
 ## 💻 Frontend (React + Vite)
 
-The frontend is a responsive, high-performance web application styled after Netflix.
+The frontend is a responsive, high-performance web application.
 
 ### Technologies Used:
 - **Core**: React 18+, Vite, React Router v6
 - **Data/Logic**: Axios (HTTP client), Zustand / Context API (State Management)
-- **Styling**: CSS Modules / Styled Components, React Icons. Mobile-first responsive design following a dark Netflix-style theme (Primary Red: `#E50914`, Dark BG: `#141414`).
+- **Styling**: CSS Modules / Styled Components, React Icons. Mobile-first responsive design following a dark theme (Primary Red: `#E50914`, Dark BG: `#141414`).
 
 ### Project Structure (Feature-Based Architecture):
 Code is grouped by functionalities (`auth`, `movies`, `favorites`, `admin`) rather than file types to ensure maintainability.

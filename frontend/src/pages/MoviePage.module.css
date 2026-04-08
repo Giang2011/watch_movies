@@ -3,6 +3,16 @@
 	gap: 16px;
 }
 
+.detailSection {
+	display: grid;
+	gap: 12px;
+}
+
+.favoriteAction {
+	display: flex;
+	justify-content: flex-end;
+}
+
 .empty {
 	border: 1px dashed var(--color-border);
 	border-radius: var(--radius-md);

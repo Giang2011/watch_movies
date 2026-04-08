@@ -16,7 +16,7 @@ function Navbar() {
 		<header className={styles.navbar}>
 			<div className={styles.brandArea}>
 				<Link to="/" className={styles.logo}>
-					NETFLIX
+					WATCH!
 				</Link>
 				<nav className={styles.navLinks}>
 					<NavLink
@@ -36,7 +36,7 @@ function Navbar() {
 							to="/favorites"
 							className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`}
 						>
-							<FaHeart aria-hidden /> Favorites
+							Favorites
 						</NavLink>
 					) : null}
 					{isAdmin ? (

@@ -13,10 +13,10 @@ function SignupPage() {
 		<div className={styles.page}>
 			<section className={styles.shell}>
 				<div className={styles.brandPanel}>
-					<h1>Join NETFLIX</h1>
+					<h1>Join WATCH!</h1>
 					<p>Create your account in seconds and unlock your personalized watch flow.</p>
 					<ul className={styles.featureList}>
-						<li>Secure JWT login</li>
+						<li>Explore trending movies</li>
 						<li>Save favorites instantly</li>
 						<li>Responsive viewing experience</li>
 					</ul>

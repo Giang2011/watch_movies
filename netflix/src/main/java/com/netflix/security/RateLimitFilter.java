@@ -23,12 +23,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * Mục đích: Ngăn chặn việc gửi quá nhiều request trong thời gian ngắn
  * từ cùng một địa chỉ IP, giúp bảo vệ server khỏi bị quá tải hoặc tấn công DDoS.
  *
- * Cấu hình hiện tại: Tối đa 5 request trong 10 giây cho mỗi địa chỉ IP.
+ * Cấu hình hiện tại: Tối đa 10 request trong 10 giây cho mỗi địa chỉ IP.
  *
  * Sử dụng thuật toán Token Bucket thông qua thư viện Bucket4j:
- * - Mỗi IP sẽ có một "xô" (bucket) chứa tối đa 5 token.
+ * - Mỗi IP sẽ có một "xô" (bucket) chứa tối đa 10 token.
  * - Mỗi request sẽ tiêu tốn 1 token.
- * - Sau mỗi 10 giây, xô sẽ được nạp đầy lại 5 token.
+ * - Sau mỗi 10 giây, xô sẽ được nạp đầy lại 10 token.
  * - Nếu hết token, request sẽ bị từ chối với mã lỗi 429 (Too Many Requests).
  */
 @Component
@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RateLimitFilter extends OncePerRequestFilter {
 
     // Số lượng request tối đa được phép trong một khoảng thời gian
-    private static final int MAX_REQUESTS = 5;
+    private static final int MAX_REQUESTS = 30;
 
     // Khoảng thời gian giới hạn (tính bằng giây)
     private static final int TIME_WINDOW_SECONDS = 10;
@@ -60,7 +60,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
      * Bucket này cho phép tối đa MAX_REQUESTS request trong TIME_WINDOW_SECONDS giây.
      */
     private Bucket createNewBucket() {
-        // Cấu hình băng thông: cho phép tối đa 5 request mỗi 10 giây
+        // Cấu hình băng thông: cho phép tối đa 20 request mỗi 10 giây
         Bandwidth limit = Bandwidth.builder()
                 .capacity(MAX_REQUESTS)                          // Sức chứa tối đa của xô: 5 token
                 .refillGreedy(MAX_REQUESTS, Duration.ofSeconds(TIME_WINDOW_SECONDS)) // Nạp lại 5 token mỗi 10 giây

@@ -260,7 +260,7 @@ function BrowsePage() {
 						</p>
 					) : (
 						<p className={styles.searchHint}>
-							Tip: Search endpoint returns IDs, this page filters the loaded movies by those IDs.
+							Type in the search box to find matching titles on the current page.
 						</p>
 					)}
 				</div>

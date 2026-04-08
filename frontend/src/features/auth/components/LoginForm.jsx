@@ -110,7 +110,6 @@ function LoginForm() {
 			<Button type="submit" isLoading={isLoading} disabled={isSubmitDisabled}>
 				Sign In
 			</Button>
-			<p className={styles.hint}>Too many attempts may trigger temporary rate limiting.</p>
 		</form>
 	);
 }

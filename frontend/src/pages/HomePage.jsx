@@ -155,7 +155,7 @@ function HomePage() {
 					<p className={styles.welcomeText}>
 						{isAuthenticated
 							? `Welcome back, ${user?.username || 'movie lover'}!`
-							: 'Welcome to Netflix Clone'}
+							: 'Welcome to Watch!'}
 					</p>
 					<h2>Tonight at a glance</h2>
 					<ul className={styles.statsList}>

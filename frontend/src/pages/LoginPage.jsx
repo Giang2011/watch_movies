@@ -13,7 +13,7 @@ function LoginPage() {
 		<div className={styles.page}>
 			<section className={styles.shell}>
 				<div className={styles.brandPanel}>
-					<h1>NETFLIX</h1>
+					<h1>WATCH!</h1>
 					<p>Welcome back. Sign in to continue your personal streaming experience.</p>
 					<ul className={styles.featureList}>
 						<li>Fast movie browsing</li>
