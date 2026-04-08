@@ -9,6 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 
+import java.util.List;
+
 @SpringBootApplication
 @EnableCaching
 @Slf4j
@@ -21,11 +23,12 @@ public class NetflixApplication {
 	@Bean
 	public CommandLineRunner initialData(RoleRepository roleRepository) {
 		return args -> {
-			if (roleRepository.count() == 0) {
-				roleRepository.save(new Role(Role.ROLE_USER));
-				roleRepository.save(new Role(Role.ROLE_MANAGER));
-				roleRepository.save(new Role(Role.ROLE_ADMIN));
-				log.info("Initialized default roles successfully");
+			List<String> defaultRoles = List.of(Role.ROLE_USER, Role.ROLE_MANAGER, Role.ROLE_ADMIN);
+			for (String roleName : defaultRoles) {
+				if (roleRepository.findByName(roleName).isEmpty()) {
+					roleRepository.save(new Role(roleName));
+					log.info("Created missing role: {}", roleName);
+				}
 			}
 		};
 	}
