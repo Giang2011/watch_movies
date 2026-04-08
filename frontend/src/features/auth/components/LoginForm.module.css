@@ -1,0 +1,48 @@
+.form {
+	width: min(420px, 100%);
+	margin: 32px auto;
+	display: grid;
+	gap: 14px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-lg);
+	background: rgba(17, 17, 17, 0.9);
+	padding: 24px;
+}
+
+.form h2 {
+	margin: 0;
+}
+
+.subtitle {
+	margin: -4px 0 8px;
+	color: var(--color-text-secondary);
+	font-size: 0.94rem;
+	line-height: 1.4;
+}
+
+.hint {
+	margin: 0;
+	color: var(--color-text-secondary);
+	font-size: 0.82rem;
+	text-align: center;
+	opacity: 0.9;
+}
+
+.passwordActions {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: -6px;
+}
+
+.passwordToggle {
+	border: none;
+	background: transparent;
+	color: var(--color-text-secondary);
+	font-size: 0.82rem;
+	cursor: pointer;
+	padding: 0;
+}
+
+.passwordToggle:hover {
+	color: var(--color-primary);
+}

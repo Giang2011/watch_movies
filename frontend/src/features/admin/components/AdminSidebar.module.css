@@ -1,0 +1,48 @@
+.sidebar {
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	background: #181818;
+	padding: 14px;
+	display: grid;
+	gap: 12px;
+}
+
+.sidebar h3 {
+	margin: 0;
+}
+
+.sidebar p {
+	margin: 0;
+	font-size: 0.86rem;
+	line-height: 1.45;
+	color: var(--color-text-secondary);
+}
+
+.nav {
+	display: grid;
+	gap: 8px;
+}
+
+.link {
+	color: var(--color-text-secondary);
+	padding: 8px 10px;
+	border-radius: var(--radius-sm);
+	border: 1px solid transparent;
+}
+
+.link:hover,
+.linkActive {
+	color: var(--color-text-primary);
+	border-color: var(--color-border);
+	background: rgba(255, 255, 255, 0.03);
+}
+
+.tips {
+	margin: 0;
+	padding-left: 18px;
+	display: grid;
+	gap: 8px;
+	color: var(--color-text-secondary);
+	font-size: 0.84rem;
+	line-height: 1.45;
+}

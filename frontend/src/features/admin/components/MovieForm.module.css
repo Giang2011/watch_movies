@@ -1,0 +1,72 @@
+.form {
+	display: grid;
+	gap: 12px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	background: #181818;
+	padding: 16px;
+}
+
+.form h3 {
+	margin: 0;
+}
+
+.helperText {
+	margin: -4px 0 2px;
+	font-size: 0.85rem;
+	color: var(--color-text-secondary);
+}
+
+.field {
+	display: grid;
+	gap: 8px;
+}
+
+.field label {
+	color: var(--color-text-secondary);
+	font-size: 0.9rem;
+}
+
+.field textarea {
+	width: 100%;
+	resize: vertical;
+	border: 1px solid var(--color-border);
+	background: #101010;
+	color: var(--color-text-primary);
+	border-radius: var(--radius-sm);
+	padding: 10px 12px;
+	line-height: 1.45;
+	min-height: 96px;
+}
+
+.fileField {
+	display: grid;
+	gap: 6px;
+}
+
+.fileField label {
+	color: var(--color-text-secondary);
+	font-size: 0.9rem;
+}
+
+.fileField input {
+	border: 1px solid var(--color-border);
+	padding: 8px;
+	border-radius: var(--radius-sm);
+	background: #101010;
+	color: var(--color-text-secondary);
+}
+
+.fileField small {
+	color: var(--color-text-secondary);
+	font-size: 0.82rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.actions {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+}

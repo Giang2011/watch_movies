@@ -1,0 +1,39 @@
+.button {
+	width: 100%;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	background: transparent;
+	color: var(--color-text-secondary);
+	padding: 8px;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+.button:hover {
+	border-color: var(--color-primary);
+	color: var(--color-text-primary);
+}
+
+.button:disabled {
+	opacity: 0.75;
+	cursor: not-allowed;
+	border-color: var(--color-border);
+	color: var(--color-text-secondary);
+}
+
+.active {
+	color: var(--color-primary);
+}
+
+.spinner {
+	animation: favorite-spin 0.8s linear infinite;
+}
+
+@keyframes favorite-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}

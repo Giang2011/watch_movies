@@ -1,10 +1,10 @@
 package com.netflix.services.impl;
 
+import com.netflix.dtos.RestPage;
 import com.netflix.entities.Movie;
 import com.netflix.repositories.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -51,8 +51,8 @@ public class MovieService {
     }
 
     @Cacheable(value = CACHE_NAME, key = "#page + '_' + #size")
-    public Page<Movie> getAllMovies(int page, int size) {
-        return movieRepository.findAll(PageRequest.of(page, size));
+    public RestPage<Movie> getAllMovies(int page, int size) {
+        return new RestPage<>(movieRepository.findAll(PageRequest.of(page, size)));
     }
 
     @Transactional

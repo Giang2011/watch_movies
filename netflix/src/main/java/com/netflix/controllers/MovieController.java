@@ -1,10 +1,10 @@
 package com.netflix.controllers;
 
 import com.netflix.dtos.MessageResponse;
+import com.netflix.dtos.RestPage;
 import com.netflix.entities.Movie;
 import com.netflix.services.impl.MovieService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +22,7 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping
-    public ResponseEntity<Page<Movie>> getMovies(
+    public ResponseEntity<RestPage<Movie>> getMovies(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(movieService.getAllMovies(page, size));

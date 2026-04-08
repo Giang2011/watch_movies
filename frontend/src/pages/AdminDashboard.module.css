@@ -1,0 +1,157 @@
+.page {
+	display: grid;
+	gap: 18px;
+}
+
+.content {
+	display: grid;
+	gap: 16px;
+}
+
+.header {
+	display: grid;
+	gap: 12px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-lg);
+	padding: 18px;
+	background:
+		radial-gradient(circle at top right, rgba(229, 9, 20, 0.16), transparent 44%),
+		rgba(25, 25, 25, 0.94);
+}
+
+.header h1 {
+	margin: 0;
+	font-size: 1.8rem;
+}
+
+.header p {
+	margin: 8px 0 0;
+	color: var(--color-text-secondary);
+}
+
+.metaChips {
+	display: grid;
+	gap: 10px;
+}
+
+.metaChips span {
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 999px;
+	padding: 8px 12px;
+	font-size: 0.88rem;
+	color: var(--color-text-secondary);
+	width: fit-content;
+}
+
+.metaChips strong {
+	color: #fff;
+}
+
+.controlPanel {
+	display: grid;
+	gap: 14px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-lg);
+	padding: 16px;
+	background: rgba(24, 24, 24, 0.92);
+}
+
+.searchPanel {
+	display: grid;
+	gap: 8px;
+}
+
+.searchPanel p {
+	margin: 0;
+	font-size: 0.88rem;
+	color: var(--color-text-secondary);
+}
+
+.actions {
+	display: grid;
+	gap: 12px;
+}
+
+.selectField {
+	display: grid;
+	gap: 8px;
+	font-size: 0.9rem;
+	color: var(--color-text-secondary);
+}
+
+.selectField select {
+	width: 100%;
+	border: 1px solid var(--color-border);
+	background: #101010;
+	color: var(--color-text-primary);
+	border-radius: var(--radius-sm);
+	padding: 10px 12px;
+}
+
+.workspace {
+	display: grid;
+	gap: 14px;
+}
+
+.pagination {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	flex-wrap: wrap;
+	color: var(--color-text-secondary);
+}
+
+.pageIndicator {
+	padding: 0 6px;
+	font-size: 0.95rem;
+	color: #fff;
+}
+
+@media (min-width: 576px) {
+	.metaChips {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.metaChips span {
+		width: 100%;
+		text-align: center;
+	}
+}
+
+@media (min-width: 768px) {
+	.page {
+		grid-template-columns: 240px minmax(0, 1fr);
+		align-items: start;
+	}
+
+	.controlPanel {
+		grid-template-columns: minmax(0, 1fr) 280px;
+		align-items: start;
+	}
+
+	.workspace {
+		grid-template-columns: 360px minmax(0, 1fr);
+		align-items: start;
+	}
+}
+
+@media (max-width: 767px) {
+	.page {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (min-width: 992px) {
+	.content {
+		gap: 18px;
+	}
+
+	.header {
+		padding: 22px;
+	}
+
+	.controlPanel {
+		padding: 18px;
+	}
+}

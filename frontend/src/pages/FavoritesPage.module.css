@@ -1,0 +1,194 @@
+.page {
+	display: grid;
+	gap: 18px;
+}
+
+.header {
+	display: grid;
+	gap: 12px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-lg);
+	padding: 18px;
+	background:
+		radial-gradient(circle at top right, rgba(229, 9, 20, 0.16), transparent 44%),
+		rgba(25, 25, 25, 0.94);
+}
+
+.header h1 {
+	margin: 0;
+	font-size: 1.8rem;
+}
+
+.header p {
+	margin: 8px 0 0;
+	color: var(--color-text-secondary);
+}
+
+.metaChips {
+	display: grid;
+	gap: 10px;
+}
+
+.metaChips span {
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 999px;
+	padding: 8px 12px;
+	font-size: 0.88rem;
+	color: var(--color-text-secondary);
+	width: fit-content;
+}
+
+.metaChips strong {
+	color: #fff;
+}
+
+.controlPanel {
+	display: grid;
+	gap: 14px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-lg);
+	padding: 16px;
+	background: rgba(24, 24, 24, 0.92);
+}
+
+.searchColumn {
+	display: grid;
+	gap: 12px;
+}
+
+.yearFilter {
+	display: grid;
+	gap: 10px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	padding: 12px;
+	background: rgba(14, 14, 14, 0.75);
+}
+
+.yearFilterHead {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.yearFilterHead p {
+	margin: 0;
+	font-size: 0.92rem;
+	color: #fff;
+}
+
+.yearFilterHead span {
+	font-size: 0.82rem;
+	color: var(--color-text-secondary);
+}
+
+.yearInputs {
+	display: grid;
+	gap: 10px;
+}
+
+.actions {
+	display: grid;
+	gap: 12px;
+}
+
+.selectField {
+	display: grid;
+	gap: 8px;
+	font-size: 0.9rem;
+	color: var(--color-text-secondary);
+}
+
+.selectField select {
+	width: 100%;
+	border: 1px solid var(--color-border);
+	background: #101010;
+	color: var(--color-text-primary);
+	border-radius: var(--radius-sm);
+	padding: 10px 12px;
+}
+
+.selectField input {
+	width: 100%;
+	border: 1px solid var(--color-border);
+	background: #101010;
+	color: var(--color-text-primary);
+	border-radius: var(--radius-sm);
+	padding: 10px 12px;
+}
+
+.pagination {
+	display: grid;
+	gap: 12px;
+	padding: 12px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	background: rgba(20, 20, 20, 0.82);
+}
+
+.paginationMeta {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	justify-content: space-between;
+	color: var(--color-text-secondary);
+	font-size: 0.9rem;
+	flex-wrap: wrap;
+}
+
+.paginationMeta strong {
+	color: #fff;
+}
+
+.paginationControls {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.pageIndicator {
+	padding: 0 6px;
+	font-size: 0.95rem;
+	color: #fff;
+}
+
+@media (min-width: 576px) {
+	.metaChips {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.metaChips span {
+		width: 100%;
+		text-align: center;
+	}
+}
+
+@media (min-width: 768px) {
+	.controlPanel {
+		grid-template-columns: minmax(0, 1fr) 260px;
+		align-items: start;
+	}
+
+	.yearInputs {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 992px) {
+	.page {
+		gap: 20px;
+	}
+
+	.header {
+		padding: 22px;
+	}
+
+	.controlPanel {
+		padding: 18px;
+		grid-template-columns: minmax(0, 1fr) 300px;
+	}
+}

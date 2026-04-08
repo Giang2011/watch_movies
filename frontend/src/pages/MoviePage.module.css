@@ -1,0 +1,11 @@
+.page {
+	display: grid;
+	gap: 16px;
+}
+
+.empty {
+	border: 1px dashed var(--color-border);
+	border-radius: var(--radius-md);
+	color: var(--color-text-secondary);
+	padding: 14px;
+}

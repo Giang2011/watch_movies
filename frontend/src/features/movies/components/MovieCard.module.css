@@ -1,0 +1,90 @@
+.card {
+	--card-rotate-x: 0deg;
+	--card-rotate-y: 0deg;
+	--card-shine-x: 50%;
+	--card-shine-y: 50%;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	overflow: hidden;
+	background: #181818;
+	position: relative;
+	transform-style: preserve-3d;
+	will-change: transform;
+	transition:
+		transform 220ms ease,
+		box-shadow 220ms ease,
+		border-color 220ms ease;
+}
+
+.card::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 220ms ease;
+	background:
+		radial-gradient(circle at var(--card-shine-x) var(--card-shine-y), rgba(255, 255, 255, 0.16), transparent 36%),
+		linear-gradient(145deg, rgba(255, 255, 255, 0.08), transparent 45%);
+}
+
+.thumbnailLink {
+	display: block;
+	line-height: 0;
+}
+
+.thumbnail {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	display: block;
+	transition: transform 260ms ease;
+}
+
+.meta {
+	padding: 10px;
+}
+
+.title {
+	margin: 0;
+	font-size: 0.95rem;
+}
+
+.year {
+	margin: 4px 0 0;
+	color: var(--color-text-secondary);
+	font-size: 0.85rem;
+}
+
+.actions {
+	padding: 0 10px 10px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.card:hover {
+		transform: perspective(900px) rotateX(var(--card-rotate-x)) rotateY(var(--card-rotate-y)) translateY(-5px)
+			scale(1.02);
+		box-shadow: 0 18px 28px rgba(0, 0, 0, 0.35);
+		border-color: rgba(255, 255, 255, 0.2);
+	}
+
+	.card:hover::after {
+		opacity: 1;
+	}
+
+	.card:hover .thumbnail {
+		transform: scale(1.055);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.card,
+	.card::after,
+	.thumbnail {
+		transition: none;
+	}
+
+	.card {
+		transform: none !important;
+	}
+}

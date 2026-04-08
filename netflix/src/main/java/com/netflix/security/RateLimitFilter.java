@@ -41,6 +41,14 @@ public class RateLimitFilter extends OncePerRequestFilter {
     // Khoảng thời gian giới hạn (tính bằng giây)
     private static final int TIME_WINDOW_SECONDS = 10;
 
+        private static final String[] EXCLUDED_PATH_PREFIXES = {
+            "/swagger-ui",
+            "/api-docs",
+            "/v3/api-docs",
+            "/swagger-resources",
+            "/webjars"
+        };
+
     /**
      * Bộ nhớ đệm lưu trữ bucket cho từng địa chỉ IP.
      * Sử dụng ConcurrentHashMap để đảm bảo an toàn khi nhiều luồng (thread) truy cập đồng thời.
@@ -94,6 +102,22 @@ public class RateLimitFilter extends OncePerRequestFilter {
         return request.getRemoteAddr();
     }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+
+        String path = request.getRequestURI();
+        for (String excludedPrefix : EXCLUDED_PATH_PREFIXES) {
+            if (path.startsWith(excludedPrefix)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Phương thức chính xử lý logic giới hạn request.
      * Được gọi mỗi khi có request đến server.
@@ -128,7 +152,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
             // Tính thời gian chờ (bao lâu nữa thì có thể gửi request tiếp)
             long waitTimeSeconds = probe.getNanosToWaitForRefill() / 1_000_000_000;
 
-            log.warn("Rate limit đã vượt quá giới hạn cho IP: {}. Cần chờ {} giây.",
+                log.warn("Rate limit exceeded for IP: {}. Retry after {} seconds.",
                     clientIP, waitTimeSeconds);
 
             // Thêm header Retry-After để client biết cần chờ bao lâu
@@ -138,7 +162,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
             // Trả về thông báo lỗi cho client bằng JSON
             String errorMessage = String.format(
-                    "{\"message\": \"Bạn đã gửi quá nhiều request. Vui lòng thử lại sau %d giây.\"}",
+                    "{\"message\": \"Too many requests. Please retry after %d seconds.\"}",
                     waitTimeSeconds
             );
             response.getWriter().write(errorMessage);

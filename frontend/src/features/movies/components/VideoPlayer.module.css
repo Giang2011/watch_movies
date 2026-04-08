@@ -1,0 +1,15 @@
+.playerWrap {
+	border-radius: var(--radius-md);
+	overflow: hidden;
+	border: 1px solid var(--color-border);
+}
+
+.player {
+	width: 100%;
+	display: block;
+	background: black;
+}
+
+.empty {
+	color: var(--color-text-secondary);
+}
